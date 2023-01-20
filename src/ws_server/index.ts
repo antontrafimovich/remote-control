@@ -1,12 +1,24 @@
 import { WebSocketServer } from "ws";
 
-import { MouseUpHandler } from "./handlers";
+import {
+  DrawRectangleHandler,
+  MouseDownHandler,
+  MouseLeftHandler,
+  MouseRightHandler,
+  MouseUpHandler,
+} from "./handlers";
 
 export const wsServer = {
   listen(port: number) {
     const ws = new WebSocketServer({ port });
 
-    const commandHandler = [new MouseUpHandler()].reduce((result, handler) => {
+    const commandHandler = [
+      new DrawRectangleHandler(),
+      new MouseRightHandler(),
+      new MouseLeftHandler(),
+      new MouseDownHandler(),
+      new MouseUpHandler(),
+    ].reduce((result, handler) => {
       return handler.setNext(result);
     }, undefined);
 
