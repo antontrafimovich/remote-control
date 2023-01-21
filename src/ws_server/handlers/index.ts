@@ -4,3 +4,4 @@ export * from "./mouse-left-command-handler";
 export * from "./mouse-right-command-handler";
 export * from "./draw-rectangle-command-handler";
 export * from "./draw-square-command-handler";
+export * from "./draw-circle-command-handler";

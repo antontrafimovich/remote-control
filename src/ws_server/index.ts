@@ -1,6 +1,7 @@
 import { WebSocketServer } from "ws";
 
 import {
+  DrawCircleHandler,
   DrawRectangleHandler,
   DrawSquareHandler,
   MouseDownHandler,
@@ -14,6 +15,7 @@ export const wsServer = {
     const ws = new WebSocketServer({ port });
 
     const commandHandler = [
+      new DrawCircleHandler(),
       new DrawSquareHandler(),
       new DrawRectangleHandler(),
       new MouseRightHandler(),
