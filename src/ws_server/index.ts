@@ -1,5 +1,4 @@
-import { connected } from "process";
-import { createWebSocketStream, WebSocket, WebSocketServer } from "ws";
+import { createWebSocketStream, WebSocketServer } from 'ws';
 
 import {
   DrawCircleHandler,
@@ -10,43 +9,55 @@ import {
   MouseRightHandler,
   MouseUpHandler,
   PrintScreenHandler,
-} from "./handlers";
+} from './handlers';
 
-export const wsServer = {
-  listen(port: number) {
-    const wss = new WebSocketServer({ port });
+const createWebSocketServer = () => {
+  let wss: WebSocketServer;
 
-    const commandHandler = [
-      new PrintScreenHandler(),
-      new DrawCircleHandler(),
-      new DrawSquareHandler(),
-      new DrawRectangleHandler(),
-      new MouseRightHandler(),
-      new MouseLeftHandler(),
-      new MouseDownHandler(),
-      new MouseUpHandler(),
-    ].reduce((result, handler) => {
-      return handler.setNext(result);
-    }, undefined);
+  return {
+    listen(port: number) {
+      wss = new WebSocketServer({ port });
 
-    wss.on("listening", () => {
-      console.log(`Start websocket server on the wss://localhost:${wss.options.port}`);
-    });
+      const commandHandler = [
+        new PrintScreenHandler(),
+        new DrawCircleHandler(),
+        new DrawSquareHandler(),
+        new DrawRectangleHandler(),
+        new MouseRightHandler(),
+        new MouseLeftHandler(),
+        new MouseDownHandler(),
+        new MouseUpHandler(),
+      ].reduce((result, handler) => {
+        return handler.setNext(result);
+      }, undefined);
 
-    wss.on("connection", (wss) => {
-      console.log("anton");
-      const wsStream = createWebSocketStream(wss, { encoding: "utf-8" });
-
-      wsStream.on("data", async (message: string) => {
-        const command = message.toString();
-
-        try {
-          await commandHandler.handle(command, wsStream);
-        } catch (err) {
-          console.error(err);
-          console.error(`${command} is not implemented`);
-        }
+      wss.on("listening", () => {
+        console.log(
+          `Start websocket server on the wss://localhost:${wss.options.port}`
+        );
       });
-    });
-  },
+
+      wss
+        .on("connection", (wss) => {
+          const wsStream = createWebSocketStream(wss, { encoding: "utf-8" });
+
+          wsStream.on("data", async (message: string) => {
+            const command = message.toString();
+
+            try {
+              await commandHandler.handle(command, wsStream);
+            } catch (err) {
+              console.error(err);
+              console.error(`${command} is not implemented`);
+            }
+          });
+        })
+        .on("close", () => console.log("Websocket server has been closed."));
+    },
+    close: () => {
+      wss.close();
+    },
+  };
 };
+
+export const wsServer = createWebSocketServer();
