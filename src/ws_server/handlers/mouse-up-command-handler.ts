@@ -5,12 +5,16 @@ import { CommandHandler } from "../model/command-handler";
 
 export class MouseUpHandler extends CommandHandler {
   async handle(command: string, ws: Duplex): Promise<void> {
-    const [commandName, value] = command.split(" ");
+    const [commandName, valueStr] = command.split(" ");
 
     if (commandName !== "mouse_up") {
       return this.next.handle(command, ws);
     }
 
-    await mouse.move(up(Number.parseInt(value)));
+    const value = Number.parseInt(valueStr);
+
+    await mouse.move(up(value));
+
+    console.log(`Mouse has been moved up by ${value} px`);
   }
 }

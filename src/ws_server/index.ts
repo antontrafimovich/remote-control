@@ -50,6 +50,8 @@ const createWebSocketServer = () => {
           wsStream.on("data", async (message: string) => {
             const command = message.toString();
 
+            console.log(command);
+
             try {
               await commandHandler.handle(command, wsStream);
             } catch (err) {

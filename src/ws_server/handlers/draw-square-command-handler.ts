@@ -20,5 +20,7 @@ export class DrawSquareHandler extends CommandHandler {
     await mouse.move(up(width));
     await mouse.move(left(width));
     await mouse.releaseButton(Button.LEFT);
+
+    console.log(`Square with size ${width} has been drawn.`);
   }
 }

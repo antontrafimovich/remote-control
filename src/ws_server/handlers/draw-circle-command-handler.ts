@@ -31,5 +31,7 @@ export class DrawCircleHandler extends CommandHandler {
     await mouse.pressButton(Button.LEFT);
     await mouse.move(updatedCoords);
     await mouse.releaseButton(Button.LEFT);
+
+    console.log(`Circle with radius ${radius} has been drawn.`);
   }
 }

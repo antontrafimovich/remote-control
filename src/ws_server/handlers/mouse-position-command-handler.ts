@@ -11,6 +11,9 @@ export class MousePositionHandler extends CommandHandler {
 
     const position = await mouse.getPosition();
 
+    console.log(
+      `Mouse position (x = ${position.x}, y = ${position.y}) has been sent.`
+    );
     ws.write(`mouse_position ${position.x},${position.y}`);
   }
 }

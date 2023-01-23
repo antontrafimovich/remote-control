@@ -22,5 +22,9 @@ export class DrawRectangleHandler extends CommandHandler {
     await mouse.move(up(height));
     await mouse.move(left(width));
     await mouse.releaseButton(Button.LEFT);
+
+    console.log(
+      `Rectangle with width ${width} and height ${height} has been drawn.`
+    );
   }
 }
