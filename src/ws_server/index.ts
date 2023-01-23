@@ -35,7 +35,7 @@ const createWebSocketServer = () => {
 
       wss.on("listening", () => {
         console.log(
-          `Start websocket server on the wss://localhost:${wss.options.port}`
+          `Start websocket server on the ws://localhost:${wss.options.port}`
         );
       });
 
