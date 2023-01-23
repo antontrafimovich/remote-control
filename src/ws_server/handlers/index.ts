@@ -6,3 +6,4 @@ export * from "./draw-rectangle-command-handler";
 export * from "./draw-square-command-handler";
 export * from "./draw-circle-command-handler";
 export * from "./print-screen-command-handler";
+export * from "./mouse-position-command-handler";
