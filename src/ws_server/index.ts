@@ -8,6 +8,7 @@ import {
   MouseLeftHandler,
   MouseRightHandler,
   MouseUpHandler,
+  PrintScreenHandler,
 } from "./handlers";
 
 export const wsServer = {
@@ -15,6 +16,7 @@ export const wsServer = {
     const ws = new WebSocketServer({ port });
 
     const commandHandler = [
+      new PrintScreenHandler(),
       new DrawCircleHandler(),
       new DrawSquareHandler(),
       new DrawRectangleHandler(),
@@ -26,18 +28,17 @@ export const wsServer = {
       return handler.setNext(result);
     }, undefined);
 
-    const handleMessage = async (message: string) => {
-      const command = message.toString();
-
-      try {
-        await commandHandler.handle(command);
-      } catch (err) {
-        console.error(`${command} is not implemented`);
-      }
-    };
-
     ws.on("connection", (ws) => {
-      ws.on("message", handleMessage);
+      ws.on("message", async (message: string) => {
+        const command = message.toString();
+
+        try {
+          await commandHandler.handle(command, ws);
+        } catch (err) {
+          console.error(err);
+          console.error(`${command} is not implemented`);
+        }
+      });
     });
   },
 };
