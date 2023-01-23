@@ -35,7 +35,7 @@ export class PrintScreenHandler extends CommandHandler {
       const buffer = await base.getBufferAsync(Jimp.MIME_PNG);
       pngBase64 = buffer.toString("base64");
     } catch (err) {
-      console.error(`PNG toBase64 convertion error: ${err}`);
+      console.error(`PNG to base64 convertion error: ${err}`);
       return;
     }
 
@@ -65,7 +65,7 @@ export class PrintScreenHandler extends CommandHandler {
       return (await image.toRGB()).data;
     } catch (err) {
       throw new Error(
-        "Error: Seems like one of the coordinates to capture is outside of your main display. Make sure, that you trying to capture an image from main display."
+        "Error: Seems like the area to capture is outside of your main display. Make sure, that you trying to capture an image from main display."
       );
     }
   }
