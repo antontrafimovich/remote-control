@@ -5,11 +5,11 @@ import { CommandHandler } from "../model/command-handler";
 
 export class DrawRectangleHandler extends CommandHandler {
   async handle(command: string, ws: Duplex): Promise<void> {
-    if (!command.includes("draw_rectangle")) {
+    const [commandName, widthStr, heightStr] = command.split(" ");
+
+    if (commandName !== "draw_rectangle") {
       return this.next.handle(command, ws);
     }
-
-    const [, widthStr, heightStr] = command.split(" ");
 
     const [width, height] = [widthStr, heightStr].map((value) =>
       Number.parseInt(value)

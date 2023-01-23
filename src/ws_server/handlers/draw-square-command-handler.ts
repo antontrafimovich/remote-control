@@ -5,9 +5,9 @@ import { CommandHandler } from "../model/command-handler";
 
 export class DrawSquareHandler extends CommandHandler {
   async handle(command: string, ws: Duplex): Promise<void> {
-    const [commandStr, widthStr] = command.split(" ");
+    const [commandName, widthStr] = command.split(" ");
 
-    if (commandStr !== "draw_square") {
+    if (commandName !== "draw_square") {
       return this.next.handle(command, ws);
     }
 

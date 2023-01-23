@@ -6,9 +6,9 @@ import { CommandHandler } from "../model/command-handler";
 
 export class DrawCircleHandler extends CommandHandler {
   async handle(command: string, ws: Duplex): Promise<void> {
-    const [commandStr, radiusStr] = command.split(" ");
+    const [commandName, radiusStr] = command.split(" ");
 
-    if (commandStr !== "draw_circle") {
+    if (commandName !== "draw_circle") {
       return this.next.handle(command, ws);
     }
 
@@ -16,12 +16,12 @@ export class DrawCircleHandler extends CommandHandler {
 
     const circle = draw({ top: { x: 0, y: radius }, radius });
 
-    const point = await mouse.getPosition();
+    const position = await mouse.getPosition();
 
     const updatedCoords = circle.map((coord) => {
       return {
-        x: coord.x + point.x,
-        y: coord.y + point.y,
+        x: coord.x + position.x,
+        y: coord.y + position.y,
       };
     });
 
