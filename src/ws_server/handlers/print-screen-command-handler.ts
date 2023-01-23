@@ -14,47 +14,59 @@ export class PrintScreenHandler extends CommandHandler {
 
     const point = await mouse.getPosition();
 
-    let image;
+    let regionBuffer;
 
     try {
-      image = await screen.grabRegion(
-        new Region(
-          point.x - squareSize / 2,
-          point.y - squareSize / 2,
-          squareSize,
-          squareSize
-        )
-      );
+      regionBuffer = await this.grabRegion({
+        left: point.x - squareSize / 2,
+        top: point.y - squareSize / 2,
+        width: squareSize,
+        height: squareSize,
+      });
     } catch (err) {
-      console.error(
+      console.error(err);
+      return;
+    }
+
+    let pngBase64;
+    try {
+      const base = await Jimp.create(squareSize, squareSize);
+      base.bitmap.data = regionBuffer;
+      const buffer = await base.getBufferAsync(Jimp.MIME_PNG);
+      pngBase64 = buffer.toString("base64");
+    } catch (err) {
+      console.error(`PNG toBase64 convertion error: ${err}`);
+      return;
+    }
+
+    const result = `${command} ${pngBase64}`;
+
+    console.log(result);
+
+    ws.write(result);
+  }
+
+  private async grabRegion({
+    left,
+    top,
+    width,
+    height,
+  }: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  }): Promise<Buffer> {
+    try {
+      const image = await screen.grabRegion(
+        new Region(left, top, width, height)
+      );
+
+      return (await image.toRGB()).data;
+    } catch (err) {
+      throw new Error(
         "Error: Seems like one of the coordinates to capture is outside of your main display. Make sure, that you trying to capture an image from main display."
       );
-      return;
     }
-
-    let jimpImage;
-    try {
-      jimpImage = new Jimp(image.data, (data) => {
-        console.log(data);
-      });
-      // console.log(image.data.toString("base64"));
-      // jimpImage = await Jimp.read(image.data.toString("base64"));
-    } catch (err) {
-      console.error(`Jimp read: ${err}`);
-      return;
-    }
-
-    // let pngBuffer;
-    // try {
-    //   console.log(jimpImage);
-    //   pngBuffer = await jimpImage.getBufferAsync("image/png");
-    // } catch (err) {
-    //   console.error(err);
-    //   return;
-    // }
-
-    // console.log(pngBuffer.toString("base64"));
-
-    // ws.send(`${command} ${pngBuffer.toString("base64")}`);
   }
 }
