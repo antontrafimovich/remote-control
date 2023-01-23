@@ -29,7 +29,12 @@ export const wsServer = {
       return handler.setNext(result);
     }, undefined);
 
+    wss.on("listening", () => {
+      console.log(`Start websocket server on the wss://localhost:${wss.options.port}`);
+    });
+
     wss.on("connection", (wss) => {
+      console.log("anton");
       const wsStream = createWebSocketStream(wss, { encoding: "utf-8" });
 
       wsStream.on("data", async (message: string) => {
