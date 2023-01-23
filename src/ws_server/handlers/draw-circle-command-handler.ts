@@ -1,16 +1,15 @@
-import { Button, mouse } from "@nut-tree/nut-js";
+import { Button, mouse } from '@nut-tree/nut-js';
+import { WebSocket } from 'ws';
 
-import { draw } from "../figures";
-import { CommandHandler } from "../model/command-handler";
+import { draw } from '../figures';
+import { CommandHandler } from '../model/command-handler';
 
 export class DrawCircleHandler extends CommandHandler {
-  async handle(command: string): Promise<void> {
+  async handle(command: string, ws: WebSocket): Promise<void> {
     const [commandStr, radiusStr] = command.split(" ");
 
-    console.log(command);
-
     if (commandStr !== "draw_circle") {
-      return this.next.handle(command);
+      return this.next.handle(command, ws);
     }
 
     const radius = Number.parseInt(radiusStr);
