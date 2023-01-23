@@ -1,10 +1,10 @@
-import { Button, down, left, mouse, right, up } from '@nut-tree/nut-js';
-import { WebSocket } from 'ws';
+import { Button, down, left, mouse, right, up } from "@nut-tree/nut-js";
+import { Duplex } from "node:stream";
 
-import { CommandHandler } from '../model/command-handler';
+import { CommandHandler } from "../model/command-handler";
 
 export class DrawSquareHandler extends CommandHandler {
-  async handle(command: string, ws: WebSocket): Promise<void> {
+  async handle(command: string, ws: Duplex): Promise<void> {
     const [commandStr, widthStr] = command.split(" ");
 
     if (commandStr !== "draw_square") {

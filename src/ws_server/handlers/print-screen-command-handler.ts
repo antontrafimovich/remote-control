@@ -1,11 +1,11 @@
-import { mouse, Region, screen, ScreenClass } from "@nut-tree/nut-js";
-import { WebSocket } from "ws";
+import { mouse, Region, screen } from "@nut-tree/nut-js";
 import Jimp from "jimp";
+import { Duplex } from "node:stream";
 
 import { CommandHandler } from "../model/command-handler";
 
 export class PrintScreenHandler extends CommandHandler {
-  async handle(command: string, ws: WebSocket): Promise<void> {
+  async handle(command: string, ws: Duplex): Promise<void> {
     if (command !== "prnt_scrn") {
       return this.next.handle(command, ws);
     }
@@ -34,11 +34,9 @@ export class PrintScreenHandler extends CommandHandler {
 
     let jimpImage;
     try {
-      jimpImage = new Jimp(image.data,
-        (data) => {
-          console.log(data);
-        }
-      );
+      jimpImage = new Jimp(image.data, (data) => {
+        console.log(data);
+      });
       // console.log(image.data.toString("base64"));
       // jimpImage = await Jimp.read(image.data.toString("base64"));
     } catch (err) {

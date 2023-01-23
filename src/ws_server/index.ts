@@ -1,4 +1,5 @@
-import { WebSocketServer } from "ws";
+import { connected } from "process";
+import { createWebSocketStream, WebSocket, WebSocketServer } from "ws";
 
 import {
   DrawCircleHandler,
@@ -13,7 +14,7 @@ import {
 
 export const wsServer = {
   listen(port: number) {
-    const ws = new WebSocketServer({ port });
+    const wss = new WebSocketServer({ port });
 
     const commandHandler = [
       new PrintScreenHandler(),
@@ -28,12 +29,14 @@ export const wsServer = {
       return handler.setNext(result);
     }, undefined);
 
-    ws.on("connection", (ws) => {
-      ws.on("message", async (message: string) => {
+    wss.on("connection", (wss) => {
+      const wsStream = createWebSocketStream(wss, { encoding: "utf-8" });
+
+      wsStream.on("data", async (message: string) => {
         const command = message.toString();
 
         try {
-          await commandHandler.handle(command, ws);
+          await commandHandler.handle(command, wsStream);
         } catch (err) {
           console.error(err);
           console.error(`${command} is not implemented`);

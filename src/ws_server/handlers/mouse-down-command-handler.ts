@@ -1,10 +1,10 @@
 import { down, mouse } from "@nut-tree/nut-js";
-import { WebSocket } from "ws";
+import { Duplex } from "node:stream";
 
 import { CommandHandler } from "../model/command-handler";
 
 export class MouseDownHandler extends CommandHandler {
-  async handle(command: string, ws: WebSocket): Promise<void> {
+  async handle(command: string, ws: Duplex): Promise<void> {
     if (!command.includes("mouse_down")) {
       return this.next.handle(command, ws);
     }
